@@ -1,0 +1,51 @@
+pipeline{
+    agent any
+    tools{
+        maven "maven3.8.8"
+    }
+    stages{
+        stage("1. Git clone from repo"){
+            steps{
+                sh "echo start of git clone"
+                git branch: 'main', url: 'https://github.com/annorakrofi/web-app.git'
+                sh "echo end of git clone"
+            }
+        }
+        
+        stage("2. Build from maven"){
+            steps{
+                sh "echo start building"
+                sh "mvn clean package"
+            }
+        }
+        stage("3.code scan"){
+            steps{
+                sh "echo start of  code scan"
+                sh "mvn sonar:sonar"
+                sh "echo end of scan"
+            }
+        }
+        stage("4.deploy of artifcat"){
+            steps{
+                sh "echo artifcat deployment "
+                sh "mvn deploy"
+                sh "echo end of artifcat deployment"
+            }
+        }
+        stage("5.Tomcat deployment"){
+        steps{
+            sh "echo deploying to to Tomcat UAT"
+            deploy adapters: [tomcat9(credentialsId: 'tomcat_cred', path: '', url: 'http://localhost:9090/')], contextPath: null, war: 'target/*.war'
+            sh "echo end of tomcat deployment"
+             }
+        }
+        stage("6.Email notifications"){
+            steps{
+                sh "echo sending email to developers"
+                emailext body: 'successfully deployed to tomcat', subject: 'artifact successfully deployed', to: 'akrofiannor'
+                
+            }
+        }
+    }
+    
+}
