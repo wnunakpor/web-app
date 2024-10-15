@@ -37,5 +37,11 @@ pipeline {
             nexusArtifactUploader artifacts: [[artifactId: 'maven-web-application', classifier: '', file: '/var/lib/jenkins/workspace/bronzy-webapp-jenkinsfile/target/web-app.war', type: 'war']], credentialsId: 'nexus-credentials', groupId: 'com.mt', nexusUrl: '13.236.178.34:8081/repository/bronzy-webapp', nexusVersion: 'nexus3', protocol: 'http', repository: 'bronzy-webapp', version: '3.0.6-RELEASE'
           }
         }
+
+        stage('prod deployment'){
+          steps{
+            deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.25.83.169:8080')], contextPath: null, war: 'target/web-app.war'
+          }
+        }
   }
 }
