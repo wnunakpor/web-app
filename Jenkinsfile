@@ -17,5 +17,19 @@ pipeline {
         sh 'mvn clean package'
       }
     }
+
+    stage('code analysis'){
+           environment {
+               scannerHome = tool 'sonar'
+           } 
+           steps{
+               script{
+                   withSonarQubeEnv('sonar'){
+                       sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=bronzy-webapp"
+                   }
+               }
+          
+           }   
+        }
   }
 }
