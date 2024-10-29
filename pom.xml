@@ -103,7 +103,7 @@
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>JOMACS Snapshot Nexus Repository </name>
-	      <url>http://localhost:8081/repository/gtb-app-snapshot/</url>
+	      <url>http://51.20.92.224:8081/repository/jomacs-webapp/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
